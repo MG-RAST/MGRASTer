@@ -399,23 +399,39 @@ call.MGRAST <- function (
 #------------------------------------------------------------------------------
 #	require (RCurl)
 
+#------------------------------------------------------------------------------
+#  ... add curl dependency for https support
+#------------------------------------------------------------------------------
+        library(curl)
+
 	checkpoint ("requesting URL: ", call.url)
 
 #
 #  use "is.filebased()"
 #
-
 	timeout.old <- getOption ("timeout")
 	options (timeout = timeout)
+	showURIoutput <- function (cond) { # error handler for somethings wrong with download.file, show HTTP response + errors
+		cat( "Error getting URL:\n" )
+		cat (paste( gettext(cond)))
+		cat("HTTP Response: ")
+		cat ( system(  paste("curl -s ", gettext(call.url), " && echo" ), intern=TRUE ) )
+		stop("\n")
+              
+		}
 	if (!is.null (destfile)) {
-		download.file (call.url, destfile=destfile, quiet=quiet)
+		tryCatch(
+		{download.file (call.url, destfile=destfile, quiet=FALSE)} ,
+		error=showURIoutput,  warning = showURIoutput )
 		if (parse || verify)
 			warning (gettext (
 				"saving to file unimplemented with \'parse\' and \'verify\'; ignoring these"))
 		options (timeout = timeout.old)
 		return (destfile)
 		}
-	x <- readLines (call.url, warn = !quiet)
+	tryCatch(
+		{x <- readLines (curl(call.url), warn = !quiet)},
+		error=showURIoutput,  warning = showURIoutput )
 	options (timeout = timeout.old)
 
 #------------------------------------------------------------------------------
@@ -493,6 +509,6 @@ API.filepath	<- function () file.path (find.package (this.package ()), "extdata"
 	assign ("this.package", pkgname, .MGRAST)
 	load (API.filepath(), .MGRAST)
 	assign ("API.version", "1", .MGRAST)
-	assign ("server", "http://api.metagenomics.anl.gov", .MGRAST)
+	assign ("server", "https://api.mg-rast.org", .MGRAST)
 	assign ('key', NULL, .MGRAST)
 	}
