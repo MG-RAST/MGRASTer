@@ -30,7 +30,7 @@
 #------------------------------------------------------------------------------
 #  set or query auth key in the package environment.
 #------------------------------------------------------------------------------
-
+#' @export
 auth.MGRAST <- function (key, file) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
 	if (! missing (file)) {
@@ -45,6 +45,7 @@ auth.MGRAST <- function (key, file) {
 #  little utility to inspect the API documentation tree.
 #------------------------------------------------------------------------------
 
+#' @export
 doc.MGRAST <- function (depth = 1, head = NULL, stratum = NULL, ...) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
 	api <- get ("API", .MGRAST)
@@ -70,6 +71,7 @@ doc.MGRAST <- function (depth = 1, head = NULL, stratum = NULL, ...) {
 #  does not reload into .MGRAST
 #------------------------------------------------------------------------------
 
+#' @export
 load.MGRAST <- function (file = API.filepath()) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
 	if (!is.null (file)) {
@@ -86,6 +88,7 @@ load.MGRAST <- function (file = API.filepath()) {
 #  does not reload into .MGRAST
 #------------------------------------------------------------------------------
 
+#' @export
 build.MGRAST <- function (file = API.filename) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
 
@@ -144,6 +147,7 @@ build.MGRAST <- function (file = API.filename) {
 #  index [-c(1,2)] drops unneeded parts of the match
 #------------------------------------------------------------------------------
 
+#' @export
 parse.MGRAST <- function (url) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
 	api <- get ("API", .MGRAST)
@@ -215,6 +219,7 @@ parse.MGRAST <- function (url) {
 ###############################################################################
 ###############################################################################
 
+#' @export
 call.MGRAST <- function (
 	resource, 								# what resource
 	request,								# what request
@@ -306,7 +311,7 @@ call.MGRAST <- function (
 		if (any(is.na(x)))
 			stop (gettext (
 				"no match or not unique for argument(s): "), 
-				collapse (names(args) [is.na (x)], x ))
+				collapse (names(args) [is.na (x)]), x )
 		names(args) <- x
 
 #------------------------------------------------------------------------------
@@ -400,9 +405,8 @@ call.MGRAST <- function (
 #	require (RCurl)
 
 #------------------------------------------------------------------------------
-#  ... add curl dependency for https support
+#  ... add curl dependency for https support  (now in DESCRIPTION courtesy devtools::use_package)
 #------------------------------------------------------------------------------
-        library(curl)
 
 	checkpoint ("requesting URL: ", call.url)
 
@@ -430,7 +434,10 @@ call.MGRAST <- function (
 		return (destfile)
 		}
 	tryCatch(
-		{x <- readLines (curl(call.url), warn = !quiet)},
+		{ con <- curl::curl(call.url)
+                x <- readLines (con, warn = !quiet)
+                close(con)
+                },
 		error=showURIoutput,  warning = showURIoutput )
 	options (timeout = timeout.old)
 
