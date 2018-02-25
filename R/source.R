@@ -417,11 +417,11 @@ call.MGRAST <- function (
 	options (timeout = timeout)
 	showURIoutput <- function (cond) { # error handler for somethings wrong with download.file, show HTTP response + errors
 		cat( "Error retrieving URL:  " )
-		cat (paste( gettext(cond), "\n"))
+		cat (paste( gettext(cond)))
 		cat( "URL requested:  " )
 		cat (paste( gettext(call.url)), "\n")
 		cat("HTTP Response: ")
-		cat ( system(  paste("curl -s ", gettext(call.url), " && echo" ), intern=TRUE ) )
+		cat ( paste( system(  paste("curl -s ", gettext(call.url)), intern=TRUE ), "\n" ))
 		stop("\n")
               
 		}
