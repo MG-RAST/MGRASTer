@@ -13,8 +13,8 @@ Manage implementation of the MG-RAST API via its local representation.
 }
 
 \usage{
-load.MGRAST(file=API.filepath())
-build.MGRAST(file=API.filename)
+load.MGRAST(filename=API.filepath())
+build.MGRAST(filename=API.filename)
 .MGRAST
 }
 \arguments{

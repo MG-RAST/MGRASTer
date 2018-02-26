@@ -138,8 +138,8 @@ call.MGRAST ('sa', 'ins', id=25823, ve='fu', issue=FALSE)
 call.MGRAST ('va', 'te', issue=FALSE)
 call.MGRAST ('va', 'da', issue=FALSE)
 
-try (call.MGRAST ("ann", issue=FALSE))
-try (call.MGRAST ("ann", "seque", issue=FALSE))
+try (call.MGRAST ("ann", issue=FALSE)) # argument "request" is missing, with no default
+try (call.MGRAST ("ann", "seque", issue=FALSE)) #  resource requires 'destfile'
 call.MGRAST ("ann", "seque", destfile="no.file", issue=FALSE)
 call.MGRAST ("compu", "alpha", issue=FALSE)
 call.MGRAST ("downloa", "setl", issue=FALSE)
@@ -148,7 +148,6 @@ try (call.MGRAST ("downloa", "sel", id=5, issue=FALSE))
 call.MGRAST ("download", "setlist", st=5, id=10, i=11, issue=FALSE)
 call.MGRAST ("download", "setlist", stage=5, id=10, id=11, issue=FALSE)
 call.MGRAST ("mat", "org", issue=FALSE)
-try (call.MGRAST ("mat", "func", fil="a", issue=FALSE))
 call.MGRAST ("mat", "func", filter="a", issue=FALSE)
 try (call.MGRAST ("mat", "func", filter="a", filter_="b", issue=FALSE))
 try (call.MGRAST ("mat", "func", filter="a", filter_l="b", filter_s="c", issue=FALSE))

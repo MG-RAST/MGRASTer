@@ -72,10 +72,10 @@ doc.MGRAST <- function (depth = 1, head = NULL, stratum = NULL, ...) {
 #------------------------------------------------------------------------------
 
 #' @export
-load.MGRAST <- function (file = API.filepath()) {
+load.MGRAST <- function (filename = API.filepath()) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
-	if (!is.null (file)) {
-		load (file)
+	if (!is.null (filename)) {
+		load (filename)
 		return (get ("API", inherits=FALSE))
 	} else get ("API", .MGRAST)
 	}
@@ -89,7 +89,7 @@ load.MGRAST <- function (file = API.filepath()) {
 #------------------------------------------------------------------------------
 
 #' @export
-build.MGRAST <- function (file = API.filename) {
+build.MGRAST <- function (filename = API.filename) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
 
 #------------------------------------------------------------------------------
@@ -120,8 +120,8 @@ build.MGRAST <- function (file = API.filename) {
 #------------------------------------------------------------------------------
 	API <- mapply (`[`, API, lapply (API, function (xx) sapply (xx, `[[`, "method") == "GET"))
 
-	if (length (file)) {
-		save (API, file=file)
+	if (length (filename)) {
+		save (API, file=filename)
 		message (gettextf ("saved \'API\' to \'%s\' in %s"), file, getwd())
 		message (gettextf ("for package build, move to %s", 
 			file.path (this.package(), "inst", "extdata")))
@@ -241,8 +241,16 @@ call.MGRAST <- function (
 #------------------------------------------------------------------------------
 #  match resource and request
 #------------------------------------------------------------------------------
-	resource <- match.arg (resource, names (api.root))
-	request <- match.arg (request, names (api.root [[resource]]))
+        if ( missing (resource) ) {  # human-readable error message
+		stop (gettext ("MGRASTer:  call.MGRAST(resource, request) requires \"resource\" parameter from among:\n", paste(names(api.root), collapse=" ")))
+		} else {
+		resource <- match.arg (resource, names (api.root))
+		}
+        if ( missing (request) ) {  # human-readable error message
+		stop (paste(gettextf ("MGRASTer: call.MGRAST(\"%s\", request) requires \"request\" parameter from among:\n", resource), paste(names(api.root[[resource]]), collapse=" ")))
+		} else {
+		request <- match.arg (request, names (api.root [[resource]]))
+		}
 	checkpoint ('resource: ', resource, '\nrequest: ', request)
 
 #------------------------------------------------------------------------------
@@ -422,7 +430,7 @@ call.MGRAST <- function (
 		cat (paste( gettext(call.url)), "\n")
 		cat("HTTP Response: ")
 		cat ( paste( system(  paste("curl -s ", gettext(call.url)), intern=TRUE ), "\n" ))
-		stop("\n")
+		stop(cond)
               
 		}
 	if (!is.null (destfile)) {
