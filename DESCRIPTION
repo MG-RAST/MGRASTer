@@ -3,8 +3,11 @@ Type: Package
 Title: API Client for the MG-RAST Metagenomics Analysis Server
 Authors@R: c(
  person (c("Daniel", "T."), "Braithwaite", 
- role = c("aut", "cre"), email = "contact.dtb@gmail.com"),
+ role = c("aut"), email = "contact.dtb@gmail.com"),
+ person (c("William", "L."), "Trimble", 
+ role = c("cre", "ctb"), email = "trimble@anl.gov"),
  person (c("University", "of"), "Chicago", role = "cph"))
+Maintainer: William L. Trimble <trimble@anl.gov>
 Version: 0.9.1
 Depends:
     R (>= 3.0),
@@ -13,7 +16,7 @@ Imports: curl
 Suggests:
     RJSONIO
 URL: https://github.com/braithwaite/MGRASTer/
-Date: 2015-02-05
+Date: 2018-05-02
 Description: Convenience Functions for R Language Access to the v.1 API of the
     MG-RAST Metagenomics Analysis Server.
 License: BSD_2_clause + file LICENSE
