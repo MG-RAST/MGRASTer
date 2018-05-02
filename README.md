@@ -13,4 +13,4 @@ Key components are the functions:
 CRAN (Comprehensive R Archive Network) hosts
 the [package](https://CRAN.R-project.org/package=MGRASTer)
 including
-its [manual](http://cran.r-project.org/web/packages/MGRASTer/MGRASTer.pdf).
+its [manual](https://cran.r-project.org/web/packages/MGRASTer/MGRASTer.pdf).
