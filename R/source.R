@@ -366,7 +366,7 @@ call.MGRAST <- function (
 			"scrubbed arguments:\n", 
 			paste(names(args), "=", args, collapse="\n"))
 
-		required.str <- paste(args[required.index], sep="/")
+		required.str <- paste(names(args)[required.index], args[required.index], sep="=", collapse="&")
 		optional.str <- paste(names(args)[optional.index], args[optional.index], sep="=", collapse="&")
 	} else {
 		required.str <- ""
@@ -387,6 +387,10 @@ call.MGRAST <- function (
 #  omit "info" where it, for some reason, fails to work; and
 #  only add required arguments if there are any.
 #------------------------------------------------------------------------------
+#  URI/V/resource/request/required?optional   if required is single
+#------------------------------------------------------------------------------
+        if (length(required) == 1 && required.str != "" && length(required.index) == 1 ) {
+	required.str <- paste(args[required.index], sep="/")
 	call.url <- paste (c (
 		get("server", .MGRAST), 
 		get("API.version", .MGRAST), 
@@ -396,13 +400,26 @@ call.MGRAST <- function (
 		if (length (required.str) && nchar (required.str))
 			required.str),
 		collapse = '/')
-
 #------------------------------------------------------------------------------
-#  attach any optional arguments after "?"
+#  URI/V/resource/request?required&optional if required is multiple 
 #------------------------------------------------------------------------------
 	if (length (optional.str) && nchar (optional.str))
 		call.url <- paste (call.url, optional.str, sep="?")
-
+	} else {
+call.url <- paste (c (
+		get("server", .MGRAST),
+		get("API.version", .MGRAST),
+		resource,
+		if (length (request) && resource %in% c('annotation','compute','inbox','m5nr','matrix','metadata','validation'))
+			request),
+		collapse = '/')
+#------------------------------------------------------------------------------
+#  attach any optional arguments after "?"
+#------------------------------------------------------------------------------
+		call.url <- paste(call.url, required.str, sep="?")
+	if (length (optional.str) && nchar (optional.str))
+		call.url <- paste (call.url, optional.str, sep="&")
+}
 #------------------------------------------------------------------------------
 #  now we are done, if the URL only is wanted
 #------------------------------------------------------------------------------
