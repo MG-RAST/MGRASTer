@@ -429,8 +429,8 @@ call.MGRAST <- function (
 		cat( "URL requested:  " )
 		cat (paste( gettext(call.url)), "\n")
 		cat("HTTP Response: ")
-		cat ( paste( system(  paste("curl -s ", gettext(call.url)), intern=TRUE ), "\n" ))
-		stop(cond)
+		cond$message <- paste( system(  paste("curl -s ", gettext(call.url)), intern=TRUE ), "\n" )
+		traceback(cond)
               
 		}
 	if (!is.null (destfile)) {
