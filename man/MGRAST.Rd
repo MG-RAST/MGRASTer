@@ -18,7 +18,7 @@ build.MGRAST(filename=API.filename)
 .MGRAST
 }
 \arguments{
-  \item{file}{a file name (string)}
+  \item{filename}{a file name (string)}
 }
 
 \details{
