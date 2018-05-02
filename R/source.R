@@ -319,7 +319,7 @@ call.MGRAST <- function (
 		if (any(is.na(x)))
 			stop (gettext (
 				"no match or not unique for argument(s): "), 
-				collapse (names(args) [is.na (x)]), x )
+				paste ( names(args)[which(is.na (x))], collapse=",") )
 		names(args) <- x
 
 #------------------------------------------------------------------------------
