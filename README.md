@@ -11,6 +11,6 @@ Key components are the functions:
 	auth.MGRAST()
 
 CRAN (Comprehensive R Archive Network) hosts
-the [package](http://cran.r-project.org/web/packages/MGRASTer/index.html)
+the [package](https://CRAN.R-project.org/package=MGRASTer)
 including
 its [manual](http://cran.r-project.org/web/packages/MGRASTer/MGRASTer.pdf).
