@@ -108,6 +108,7 @@ build.MGRAST <- function (filename = API.filename) {
 	API <- list()
 	for (rr in resources) {
 		rr.url <- paste (server.path, rr, sep="/")
+                message(paste("Fetching page for ", rr.url))
 		request.page <- RJSONIO::fromJSON(
 			readLines (rr.url, warn = FALSE), asText = TRUE, simplify = TRUE)
 		API [[rr]] <- request.page$requests
@@ -122,7 +123,7 @@ build.MGRAST <- function (filename = API.filename) {
 
 	if (length (filename)) {
 		save (API, file=filename)
-		message (gettextf ("saved \'API\' to \'%s\' in %s"), file, getwd())
+		message (gettextf ("saved \'API\' to \'%s\' in %s", filename, getwd()))
 		message (gettextf ("for package build, move to %s", 
 			file.path (this.package(), "inst", "extdata")))
 		file
