@@ -366,11 +366,17 @@ call.MGRAST <- function (
 #  note: match.arg() signals error upon no match
 #------------------------------------------------------------------------------
 
+
 		args <- mapply (
 			function (nn, aa, cv)
+				{
+				cantmatch <- function(err) { cat( "Can't match term ", nn, "=", aa, 
+				" to valid values (", paste(cv[[nn]], collapse=","), ")\n" ); stop(err);}
 				if (nn %in% names (cv)) {
-					match.arg (aa, cv [[nn]])
-				} else aa,
+					tryCatch(
+					{match.arg (aa, cv [[nn]])}, 
+ 					warning=cantmatch, error=cantmatch) 
+				} else aa},
 			names(args), args, MoreArgs=list (cv))
 
 		checkpoint(
