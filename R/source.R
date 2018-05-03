@@ -36,7 +36,14 @@ auth.MGRAST <- function (key, file) {
 	if (! missing (file)) {
 		key <- readLines (file, n=1, warn=FALSE)
 	} else if (missing (key))
-		key <- readLines (n=1)
+		{
+		if (nchar(Sys.getenv("MGRKEY")) > 0) {
+			key <- Sys.getenv("MGRKEY")
+		} else {
+			cat("Enter MGRAST webkey:\n")
+			key <- readLines (n=1)
+			}
+		}
 	assign ('key', key, .MGRAST)
 	key
 	}
@@ -250,7 +257,11 @@ call.MGRAST <- function (
         if ( missing (request) ) {  # human-readable error message
 		stop (paste(gettextf ("MGRASTer: call.MGRAST(\"%s\", request) requires \"request\" parameter from among:\n", resource), paste(names(api.root[[resource]]), collapse=" ")))
 		} else {
-		request <- match.arg (request, names (api.root [[resource]]))
+                 nomatchrequest <- function (err) {
+                        cat(paste("Should have ", request, " among ", paste(names(api.root[[resource]]), collapse=","), collapse="")) ; traceback(err) }
+                 tryCatch({
+		request <- match.arg (request, names (api.root [[resource]]))},
+                      error=nomatchrequest, warning=nomatchrequest )    # bad messages if this fails
 		}
 	checkpoint ('resource: ', resource, '\nrequest: ', request)
 
@@ -370,7 +381,9 @@ call.MGRAST <- function (
 		optional.str <- paste(names(args)[optional.index], args[optional.index], sep="=", collapse="&")
 	} else {
 		required.str <- ""
+		required.index <- NULL
 		optional.str <- ""
+		optional.index <- NULL
 		}
 
 	key <- get ('key', .MGRAST, inherits=FALSE)
@@ -389,7 +402,10 @@ call.MGRAST <- function (
 #------------------------------------------------------------------------------
 #  URI/V/resource/request/required?optional   if required is single
 #------------------------------------------------------------------------------
-        if (length(required) == 1 && required.str != "" && length(required.index) == 1 ) {
+        if (length(required) == 1 && required.str != "" && length(required.index) == 1 &&    
+		resource %in% c("sample", "search", "metagenome", "annotation", "darkmatter") ||
+                request %in% c("instance", "similarity", "status", "data") )  # These api calls take positional arguments only
+		{    # Handle positional arguments
 	required.str <- paste(args[required.index], sep="/")
 	call.url <- paste (c (
 		get("server", .MGRAST), 
@@ -405,7 +421,7 @@ call.MGRAST <- function (
 #------------------------------------------------------------------------------
 	if (length (optional.str) && nchar (optional.str))
 		call.url <- paste (call.url, optional.str, sep="?")
-	} else {
+	} else {  # Handle keyword arguments, even if required arguments are keywork arguments
 call.url <- paste (c (
 		get("server", .MGRAST),
 		get("API.version", .MGRAST),
