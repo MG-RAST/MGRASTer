@@ -7,11 +7,11 @@
 #  The URLs are listed below as of April 2014.
 #  Changes to these examples might require also changing the examples of call.MGRAST.Rd.
 #
-#  https://api.mg-rast.org/annotation/sequence/mgm4447943.3?evalue=10&type=organism&source=SwissProt
-#  https://api.mg-rast.org/annotation/similarity/mgm4447943.3?identity=80&type=function&source=KO
-#  https://api.mg-rast.org/compute/alphadiversity/mgm4447943.3?level=order
-#  https://api.mg-rast.org/download/mgm4447943.3?file=350.1
-#  https://api.mg-rast.org/download/mgm4447943.3?stage=650
+#  https://api.mg-rast.org/annotation/sequence/mgm4447970.3?evalue=10&type=organism&source=SwissProt
+#  https://api.mg-rast.org/annotation/similarity/mgm4447970.3?identity=80&type=function&source=KO
+#  https://api.mg-rast.org/compute/alphadiversity/mgm4447970.3?level=order
+#  https://api.mg-rast.org/download/mgm4447970.3?file=350.1
+#  https://api.mg-rast.org/download/mgm4447970.3?stage=650
 #  https://api.mg-rast.org/library?limit=20&order=name
 #  https://api.mg-rast.org/library/mgl52924?verbosity=full
 #  https://api.mg-rast.org/m5nr/ontology?source=Subsystems&min_level=level3
@@ -23,14 +23,14 @@
 #  https://api.mg-rast.org/m5nr/function/sulfatase?source=GenBank
 #  https://api.mg-rast.org/m5nr/organism/akkermansia?source=KEGG
 #  https://api.mg-rast.org/m5nr/sequence/MAGENHQWQGSIL?source=TrEMBL
-#  https://api.mg-rast.org/matrix/organism?id=mgm4447943.3&id=mgm4447192.3&id=mgm4447102.3&id=mgm4447103.3&group_level=family&source=RefSeq&result_type=abundance&evalue=15
-#  https://api.mg-rast.org/matrix/function?id=mgm4447943.3&id=mgm4447192.3&id=mgm4447102.3&id=mgm4447103.3&group_level=level3&source=Subsystems&result_type=abundance&identity=80&filter_level=phylum&filter=Firmicutes
-#  https://api.mg-rast.org/matrix/feature?id=mgm4447943.3&id=mgm4447192.3&id=mgm4447102.3&id=mgm4447103.3&source=KEGG&result_type=evalue&length=25
+#  https://api.mg-rast.org/matrix/organism?id=mgm4447970.3&id=mgm4447192.3&id=mgm4447102.3&id=mgm4447103.3&group_level=family&source=RefSeq&result_type=abundance&evalue=15
+#  https://api.mg-rast.org/matrix/function?id=mgm4447970.3&id=mgm4447192.3&id=mgm4447102.3&id=mgm4447103.3&group_level=level3&source=Subsystems&result_type=abundance&identity=80&filter_level=phylum&filter=Firmicutes
+#  https://api.mg-rast.org/matrix/feature?id=mgm4447970.3&id=mgm4447192.3&id=mgm4447102.3&id=mgm4447103.3&source=KEGG&result_type=evalue&length=25
 #  https://api.mg-rast.org/metadata/template
 #  https://api.mg-rast.org/metadata/cv
 #  https://api.mg-rast.org/metadata/export/mgp128
 #  https://api.mg-rast.org/metagenome?limit=20&order=name
-#  https://api.mg-rast.org/metagenome/mgm4447943.3?verbosity=metadata
+#  https://api.mg-rast.org/metagenome/mgm4447970.3?verbosity=metadata
 #  https://api.mg-rast.org/project?limit=20&order=name
 #  https://api.mg-rast.org/project/mgp128?verbosity=full
 #  https://api.mg-rast.org/sample?limit=20&order=name
@@ -107,30 +107,45 @@ doc.MGRAST (2, c('mat','func','param','opt','group_level'))
 #  calls intended to produce errors are "try"d.
 #-----------------------------------------------------------------------------
 
-call.MGRAST ('an', 'se', id=4447943.3, ev=10, ty='or', so='Sw', destfile="no.file", issue=FALSE)
-call.MGRAST ('an', 'si', id=4447943.3, iden=80, ty='fu', so='KO', destfile="no.file", issue=FALSE)
-call.MGRAST ('co', 'al', id=4447943.3, le='or', issue=FALSE)
-call.MGRAST ('do', 'ins', id=4447943.3, fi=350.1, destfile="no.file", issue=FALSE)
-call.MGRAST ('do', 'se', id=4447943.3, st=650, issue=FALSE)
+## Use the Travis / GitHub integrations to suppress these tests in the CRAN test
+## environment.  This environment variable to "yes" in .travis.yml in CRAN:
+##
+## Set this variable manually if you want to run the tests
+##
+if (TRUE)   # always run these tests, they have issue=FALSE and don't make HTTP calls
+
+{
+
+call.MGRAST ('an', 'se', id=4447970.3, ev=10, ty='or', so='Sw', destfile="no.file", issue=FALSE)
+call.MGRAST ('an', 'si', id=4447970.3, iden=80, ty='fu', so='KO', destfile="no.file", issue=FALSE)
+call.MGRAST ('co', 'al', id=4447970.3, le='or', issue=FALSE)
+
+call.MGRAST ('do', 'ins', id=4447970.3, fi=350.1, destfile="no.file", issue=FALSE)
+call.MGRAST ('do', 'se', id=4447970.3, st=650, issue=FALSE)
+
 call.MGRAST ('li', 'qu', lim=20, or='na', issue=FALSE)
 call.MGRAST ('li', 'ins', id=52924, ve='fu', issue=FALSE)
+
 call.MGRAST ('m5', 'on', so='Subsystems', mi='level3', issue=FALSE)
 call.MGRAST ('m5', 'ta', filter='Bacteroidetes', filter_l='phylum', mi='genus', issue=FALSE)
 call.MGRAST ('m5', 'so', issue=FALSE)
 call.MGRAST ('m5', 'ac', id='YP_003268079.1', issue=FALSE)
+
 call.MGRAST ('m5', 'al', text='IPR001478', issue=FALSE)
 call.MGRAST ('m5', 'md', id='000821a2e2f63df1a3873e4b280002a8', so='InterPro', issue=FALSE)
 call.MGRAST ('m5', 'fu', text='sulfatase', so='GenBank', issue=FALSE)
 call.MGRAST ('m5', 'or', text='akkermansia', so='KEGG', issue=FALSE)
 call.MGRAST ('m5', 'se', text='MAGENHQWQGSIL', so='TrEMBL', issue=FALSE)
-call.MGRAST ('ma', 'or', id=c(4447943.3, 4447192.3, 4447102.3, 4447103.3), gro='family', so='Ref', resu='ab', ev=15, issue=FALSE)
-call.MGRAST ('ma', 'fu', id=c(4447943.3, 4447192.3, 4447102.3, 4447103.3), gro='level3', so='Sub', resu='ab', iden=80, filter_l='phylum', filter='Firmicutes', issue=FALSE)
-call.MGRAST ('ma', 'fu', id=c(4447943.3, 4447192.3, 4447102.3, 4447103.3), so='KO', resu='ev', len=25, issue=FALSE)
+
+call.MGRAST ('ma', 'or', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), gro='family', so='Ref', resu='ab', ev=15, issue=FALSE)
+call.MGRAST ('ma', 'fu', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), gro='level3', so='Sub', resu='ab', iden=80, filter_l='phylum', filter='Firmicutes', issue=FALSE)
+call.MGRAST ('ma', 'fu', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), so='KO', resu='ev', len=25, issue=FALSE)
+
 call.MGRAST ('metadata', 'te', issue=FALSE)
 call.MGRAST ('metadata', 'cv', issue=FALSE)
-call.MGRAST ('metadata', 'ex', id=128, issue=FALSE)
+call.MGRAST ('metadata', 'ex', id="mgp128", issue=FALSE)
 call.MGRAST ('metageno','qu', lim=20, ord='name', issue=FALSE)
-call.MGRAST ('metageno','ins', id=4447943.3, ve='me', issue=FALSE)
+call.MGRAST ('metageno','ins', id=4447970.3, ve='me', issue=FALSE)
 call.MGRAST ('proj', 'qu', lim=20, or='na', issue=FALSE)
 call.MGRAST ('proj', 'ins', id=128, ve='fu', issue=FALSE)
 call.MGRAST ('sa', 'qu', lim=20, or='na', issue=FALSE)
@@ -138,19 +153,20 @@ call.MGRAST ('sa', 'ins', id=25823, ve='fu', issue=FALSE)
 call.MGRAST ('va', 'te', issue=FALSE)
 call.MGRAST ('va', 'da', issue=FALSE)
 
-try (call.MGRAST ("ann", issue=FALSE)) # argument "request" is missing, with no default
-try (call.MGRAST ("ann", "seque", issue=FALSE)) #  resource requires 'destfile'
+call.MGRAST ("ann", "info", issue=FALSE)
 call.MGRAST ("ann", "seque", destfile="no.file", issue=FALSE)
 call.MGRAST ("compu", "alpha", issue=FALSE)
 call.MGRAST ("downloa", "setl", issue=FALSE)
-call.MGRAST ("downloa", "setl", id=5, issue=FALSE)
-try (call.MGRAST ("downloa", "sel", id=5, issue=FALSE))
-call.MGRAST ("download", "setlist", st=5, id=10, i=11, issue=FALSE)
-call.MGRAST ("download", "setlist", stage=5, id=10, id=11, issue=FALSE)
+call.MGRAST ("downloa", "setl", id=4447970.3, issue=FALSE)
+try (call.MGRAST ("downloa", "sel", id=4447970.3, issue=FALSE))
+call.MGRAST ("download", "setlist", st=300, id=4447970.3, i=4447192.3, issue=FALSE)
+call.MGRAST ("download", "setlist", stage=300, id=4447970.3, id=4447192.3, issue=FALSE)
 call.MGRAST ("mat", "org", issue=FALSE)
 call.MGRAST ("mat", "func", filter="a", issue=FALSE)
-try (call.MGRAST ("mat", "func", filter="a", filter_="b", issue=FALSE))
-try (call.MGRAST ("mat", "func", filter="a", filter_l="b", filter_s="c", issue=FALSE))
+call.MGRAST ("mat", "func", id=4447970.3, filter="escherichia", filter_l="family", issue=FALSE)
+call.MGRAST ("mat", "func", id=4447970.3, filter="escherichia", filter_l="family", filter_s="SEED", issue=FALSE)
+
+}
 
 #-----------------------------------------------------------------------------
 #  test calls retrieving info pages
