@@ -84,11 +84,11 @@ API <- get ("API", envir=.MGRAST)
 if (Sys.getenv("RunFOAASTests=yes") == "yes")
 
 {
-
-call.MGRAST ('an', 'se', id=4447970.3, ev=10, ty='or', so='Sw', destfile="no.file", issue=FALSE)   # Too slow
-call.MGRAST ('an', 'si', id=4447970.3, iden=80, ty='fu', so='KO', destfile="no.file", issue=FALSE) # Too slow 
+tt <- tempfile()
+call.MGRAST ('an', 'se', id=4447970.3, ev=10, ty='or', so='Sw', destfile=file.path(tempdir(),"4447970.3.annotation.fa"), issue=FALSE)   # Too slow
+call.MGRAST ('an', 'si', id=4447970.3, iden=80, ty='fu', so='KO', destfile=file.path(tempdir(),"4447970.3.similarity.csv"), issue=FALSE) # Too slow 
 call.MGRAST ('co', 'al', id=4447970.3, le='or', issue=TRUE) # MGRASTer: resource missing component(s): url 
-call.MGRAST ('do', 'ins', id=4447970.3, fi=350.1, destfile="no.file", issue=FALSE)  # Too slow
+call.MGRAST ('do', 'ins', id=4447970.3, fi=350.1, destfile=file.path(tempdir(),"4447970.3.350.fa"), issue=FALSE)  # Too slow
 call.MGRAST ('do', 'se', id=4447970.3, st=650, issue=FALSE)  # MGRASTer: resource missing component(s): stage_id stage_name file_id stage_type file_name 
 call.MGRAST ('li', 'qu', lim=20, or='na', issue=TRUE)
 call.MGRAST ('li', 'ins', id=52924, ve='fu', issue=TRUE) # MGRASTer: resource missing component(s): sequencesets 
@@ -114,7 +114,7 @@ call.MGRAST ('sa', 'qu', lim=20, or='na', issue=TRUE)
 call.MGRAST ('sa', 'ins', id=25823, ve='fu', issue=TRUE)
 call.MGRAST ('va', 'te', issue=TRUE)
 call.MGRAST ("ann", "info", issue=TRUE)
-call.MGRAST ("ann", "seque", destfile="no.file", issue=TRUE)
+call.MGRAST ("ann", "seque", destfile=file.path(tempdir(),"4447970.annotation.fa"), issue=TRUE)
 call.MGRAST ("compu", "alpha", issue=TRUE)
 call.MGRAST ("downloa", "setl", issue=TRUE)
 call.MGRAST ("downloa", "setl", id=4447970.3, issue=TRUE) 
