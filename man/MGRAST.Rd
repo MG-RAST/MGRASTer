@@ -63,7 +63,7 @@ Daniel T. Braithwaite
 }
 
 \examples{
-\dontrun{
+\donttest{
 ##  get API currently in use
 API <- get ("API", .MGRAST)
 

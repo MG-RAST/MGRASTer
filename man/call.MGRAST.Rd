@@ -84,7 +84,7 @@ Daniel T. Braithwaite
 }
 
 \examples{
-\dontrun{
+\donttest{
 ##  The calls below are adapted from the MG-RAST API documentation pages.
 ##  An example is provided for most resource types.
 ##  These examples are "not run" because they take too long.
