@@ -408,8 +408,8 @@ call.MGRAST <- function (
 #------------------------------------------------------------------------------
 #  URI/V/resource/request/required?optional   if required is single
 #------------------------------------------------------------------------------
-        if (length(required) == 1 && required.str != "" && length(required.index) == 1 &&    
-		resource %in% c("sample", "search", "metagenome", "annotation", "darkmatter") ||
+        if ( # length(required) == 1 && required.str != "" && length(required.index) == 1 ||    
+		resource %in% c("sample", "search", "metagenome", "annotation", "darkmatter", "download") ||
                 request %in% c("instance", "similarity", "status", "data") )  # These api calls take positional arguments only
 		{    # Handle positional arguments
 	required.str <- paste(args[required.index], sep="/")
