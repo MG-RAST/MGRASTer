@@ -36,7 +36,14 @@ auth.MGRAST <- function (key, file) {
 	if (! missing (file)) {
 		key <- readLines (file, n=1, warn=FALSE)
 	} else if (missing (key))
-		key <- readLines (n=1)
+		{
+		if (nchar(Sys.getenv("MGRKEY")) > 0) {
+			key <- Sys.getenv("MGRKEY")
+		} else {
+			cat("Enter MGRAST webkey:\n")
+			key <- readLines (n=1)
+			}
+		}
 	assign ('key', key, .MGRAST)
 	key
 	}
@@ -72,10 +79,10 @@ doc.MGRAST <- function (depth = 1, head = NULL, stratum = NULL, ...) {
 #------------------------------------------------------------------------------
 
 #' @export
-load.MGRAST <- function (file = API.filepath()) {
+load.MGRAST <- function (filename = API.filepath()) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
-	if (!is.null (file)) {
-		load (file)
+	if (!is.null (filename)) {
+		load (filename)
 		return (get ("API", inherits=FALSE))
 	} else get ("API", .MGRAST)
 	}
@@ -89,7 +96,7 @@ load.MGRAST <- function (file = API.filepath()) {
 #------------------------------------------------------------------------------
 
 #' @export
-build.MGRAST <- function (file = API.filename) {
+build.MGRAST <- function (filename = API.filename) {
 	.MGRAST <- .MGRAST								# only for clean CRAN check
 
 #------------------------------------------------------------------------------
@@ -108,6 +115,7 @@ build.MGRAST <- function (file = API.filename) {
 	API <- list()
 	for (rr in resources) {
 		rr.url <- paste (server.path, rr, sep="/")
+                message(paste("Fetching page for ", rr.url))
 		request.page <- RJSONIO::fromJSON(
 			readLines (rr.url, warn = FALSE), asText = TRUE, simplify = TRUE)
 		API [[rr]] <- request.page$requests
@@ -120,9 +128,9 @@ build.MGRAST <- function (file = API.filename) {
 #------------------------------------------------------------------------------
 	API <- mapply (`[`, API, lapply (API, function (xx) sapply (xx, `[[`, "method") == "GET"))
 
-	if (length (file)) {
-		save (API, file=file)
-		message (gettextf ("saved \'API\' to \'%s\' in %s"), file, getwd())
+	if (length (filename)) {
+		save (API, file=filename)
+		message (gettextf ("saved \'API\' to \'%s\' in %s", filename, getwd()))
 		message (gettextf ("for package build, move to %s", 
 			file.path (this.package(), "inst", "extdata")))
 		file
@@ -241,8 +249,20 @@ call.MGRAST <- function (
 #------------------------------------------------------------------------------
 #  match resource and request
 #------------------------------------------------------------------------------
-	resource <- match.arg (resource, names (api.root))
-	request <- match.arg (request, names (api.root [[resource]]))
+        if ( missing (resource) ) {  # human-readable error message
+		stop (gettext ("MGRASTer:  call.MGRAST(resource, request) requires \"resource\" parameter from among:\n", paste(names(api.root), collapse=" ")))
+		} else {
+		resource <- match.arg (resource, names (api.root))
+		}
+        if ( missing (request) ) {  # human-readable error message
+		stop (paste(gettextf ("MGRASTer: call.MGRAST(\"%s\", request) requires \"request\" parameter from among:\n", resource), paste(names(api.root[[resource]]), collapse=" ")))
+		} else {
+                 nomatchrequest <- function (err) {
+                        cat(paste("Should have ", request, " among ", paste(names(api.root[[resource]]), collapse=","), collapse="")) ; traceback(err) }
+                 tryCatch({
+		request <- match.arg (request, names (api.root [[resource]]))},
+                      error=nomatchrequest, warning=nomatchrequest )    # bad messages if this fails
+		}
 	checkpoint ('resource: ', resource, '\nrequest: ', request)
 
 #------------------------------------------------------------------------------
@@ -311,7 +331,7 @@ call.MGRAST <- function (
 		if (any(is.na(x)))
 			stop (gettext (
 				"no match or not unique for argument(s): "), 
-				collapse (names(args) [is.na (x)]), x )
+				paste ( names(args)[which(is.na (x))], collapse=",") )
 		names(args) <- x
 
 #------------------------------------------------------------------------------
@@ -346,22 +366,30 @@ call.MGRAST <- function (
 #  note: match.arg() signals error upon no match
 #------------------------------------------------------------------------------
 
+
 		args <- mapply (
 			function (nn, aa, cv)
+				{
+				cantmatch <- function(err) { cat( "Can't match term ", nn, "=", aa, 
+				" to valid values (", paste(cv[[nn]], collapse=","), ")\n" ); stop(err);}
 				if (nn %in% names (cv)) {
-					match.arg (aa, cv [[nn]])
-				} else aa,
+					tryCatch(
+					{match.arg (aa, cv [[nn]])}, 
+ 					warning=cantmatch, error=cantmatch) 
+				} else aa},
 			names(args), args, MoreArgs=list (cv))
 
 		checkpoint(
 			"scrubbed arguments:\n", 
 			paste(names(args), "=", args, collapse="\n"))
 
-		required.str <- paste(args[required.index], sep="/")
+		required.str <- paste(names(args)[required.index], args[required.index], sep="=", collapse="&")
 		optional.str <- paste(names(args)[optional.index], args[optional.index], sep="=", collapse="&")
 	} else {
 		required.str <- ""
+		required.index <- NULL
 		optional.str <- ""
+		optional.index <- NULL
 		}
 
 	key <- get ('key', .MGRAST, inherits=FALSE)
@@ -378,6 +406,13 @@ call.MGRAST <- function (
 #  omit "info" where it, for some reason, fails to work; and
 #  only add required arguments if there are any.
 #------------------------------------------------------------------------------
+#  URI/V/resource/request/required?optional   if required is single
+#------------------------------------------------------------------------------
+        if ( # length(required) == 1 && required.str != "" && length(required.index) == 1 ||    
+		resource %in% c("sample", "search", "metagenome", "annotation", "darkmatter", "download") ||
+                request %in% c("instance", "similarity", "status", "data") )  # These api calls take positional arguments only
+		{    # Handle positional arguments
+	required.str <- paste(args[required.index], sep="/")
 	call.url <- paste (c (
 		get("server", .MGRAST), 
 		get("API.version", .MGRAST), 
@@ -387,13 +422,26 @@ call.MGRAST <- function (
 		if (length (required.str) && nchar (required.str))
 			required.str),
 		collapse = '/')
-
 #------------------------------------------------------------------------------
-#  attach any optional arguments after "?"
+#  URI/V/resource/request?required&optional if required is multiple 
 #------------------------------------------------------------------------------
 	if (length (optional.str) && nchar (optional.str))
 		call.url <- paste (call.url, optional.str, sep="?")
-
+	} else {  # Handle keyword arguments, even if required arguments are keywork arguments
+call.url <- paste (c (
+		get("server", .MGRAST),
+		get("API.version", .MGRAST),
+		resource,
+		if (length (request) && resource %in% c('annotation','compute','inbox','m5nr','matrix','metadata','validation'))
+			request),
+		collapse = '/')
+#------------------------------------------------------------------------------
+#  attach any optional arguments after "?"
+#------------------------------------------------------------------------------
+		call.url <- paste(call.url, required.str, sep="?")
+	if (length (optional.str) && nchar (optional.str))
+		call.url <- paste (call.url, optional.str, sep="&")
+}
 #------------------------------------------------------------------------------
 #  now we are done, if the URL only is wanted
 #------------------------------------------------------------------------------
@@ -416,11 +464,13 @@ call.MGRAST <- function (
 	timeout.old <- getOption ("timeout")
 	options (timeout = timeout)
 	showURIoutput <- function (cond) { # error handler for somethings wrong with download.file, show HTTP response + errors
-		cat( "Error getting URL:\n" )
+		cat( "Error retrieving URL:  " )
 		cat (paste( gettext(cond)))
+		cat( "URL requested:  " )
+		cat (paste( gettext(call.url)), "\n")
 		cat("HTTP Response: ")
-		cat ( system(  paste("curl -s ", gettext(call.url), " && echo" ), intern=TRUE ) )
-		stop("\n")
+		cond$message <- paste( system(  paste("curl -s ", gettext(call.url)), intern=TRUE ), "\n" )
+		traceback(cond)
               
 		}
 	if (!is.null (destfile)) {

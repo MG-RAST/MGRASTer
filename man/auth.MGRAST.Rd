@@ -49,9 +49,9 @@ Daniel T. Braithwaite
 }
 
 \examples{
-\dontrun{
+\donttest{
 auth.MGRAST("j6FNL61ekNarTgqupMma6eMx5")
-auth.MGRAST(file="my_key.txt")
+auth.MGRAST(file=system.file("extdata", "my_file.txt", package = "MGRASTer"))
 auth.MGRAST()
 }
 }

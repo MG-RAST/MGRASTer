@@ -66,38 +66,7 @@ get ("API", envir=.MGRAST)
 API <- get ("API", envir=.MGRAST)
 
 #-----------------------------------------------------------------------------
-#  test docs
-#-----------------------------------------------------------------------------
-
-doc.MGRAST()
-doc.MGRAST(2)
-doc.MGRAST(3)
-
-doc.MGRAST (head="matrix")
-doc.MGRAST (2, "matrix")
-doc.MGRAST (3, "matrix")
-
-doc.MGRAST (stratum="parameters")
-doc.MGRAST (2, stratum="parameters")
-doc.MGRAST (3, stratum="parameters")
-
-doc.MGRAST (stratum="options")
-doc.MGRAST (2, stratum="options")
-doc.MGRAST (3, stratum="options")
-
-doc.MGRAST (stratum="required")
-doc.MGRAST (2, stratum="required")
-doc.MGRAST (3, stratum="required")
-
-doc.MGRAST (stratum="attributes")
-doc.MGRAST (2, stratum="attributes")
-doc.MGRAST (3, stratum="attributes")
-
-doc.MGRAST (2, c('mat','orga','param','opt','group_level'))
-doc.MGRAST (2, c('mat','func','param','opt','group_level'))
-
-#-----------------------------------------------------------------------------
-#  test URL construction from arguments, without issuing any calls.
+#  test API calls ! 
 #
 #  the first set are calls from API documentation, adapted by hand, April 2014.
 #  some are copied in the doc examples of call.MGRAST() and parse.MGRAST().
@@ -112,53 +81,52 @@ doc.MGRAST (2, c('mat','func','param','opt','group_level'))
 ##
 ## Set this variable manually if you want to run the tests
 ##
-if (TRUE)   # always run these tests, they have issue=FALSE and don't make HTTP calls
+if (Sys.getenv("RunFOAASTests=yes") == "yes")
 
 {
-tt <- tempdir()
-call.MGRAST ('an', 'se', id=4447970.3, ev=10, ty='or', so='Sw', destfile=file.path(tempdir(),"4447970.3.annotation.fa"), issue=FALSE)
-call.MGRAST ('an', 'si', id=4447970.3, iden=80, ty='fu', so='KO', destfile=file.path(tempdir(),"4447970.3.similarity.csv"), issue=FALSE)
-call.MGRAST ('co', 'al', id=4447970.3, le='or', issue=FALSE)
-call.MGRAST ('do', 'ins', id=4447970.3, fi=350.1, destfile=file.path(tempdir(),"4447970.3.350.fa"), issue=FALSE)
-call.MGRAST ('do', 'se', id=4447970.3, st=650, issue=FALSE)
-call.MGRAST ('li', 'qu', lim=20, or='na', issue=FALSE)
-call.MGRAST ('li', 'ins', id=52924, ve='fu', issue=FALSE)
-call.MGRAST ('m5', 'on', so='Subsystems', mi='level3', issue=FALSE)
-call.MGRAST ('m5', 'ta', filter='Bacteroidetes', filter_l='phylum', mi='genus', issue=FALSE)
-call.MGRAST ('m5', 'so', issue=FALSE)
-call.MGRAST ('m5', 'ac', id='YP_003268079.1', issue=FALSE)
-call.MGRAST ('m5', 'md', id='000821a2e2f63df1a3873e4b280002a8', so='InterPro', issue=FALSE)
-call.MGRAST ('m5', 'fu', text='sulfatase', so='GenBank', issue=FALSE)
-call.MGRAST ('m5', 'or', text='akkermansia', so='KEGG', issue=FALSE)
-call.MGRAST ('m5', 'se', text='MAGENHQWQGSIL', so='TrEMBL', issue=FALSE)
-call.MGRAST ('ma', 'or', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), gro='family', so='Ref', resu='ab', ev=15, issue=FALSE)
-call.MGRAST ('ma', 'fu', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), gro='level3', so='Sub', resu='ab', iden=80, filter_l='phylum', filter='Firmicutes', issue=FALSE)
-call.MGRAST ('ma', 'fu', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), so='KO', resu='ev', len=25, issue=FALSE)
-call.MGRAST ('metadata', 'te', issue=FALSE)
-call.MGRAST ('metadata', 'cv', issue=FALSE)
-call.MGRAST ('metadata', 'ex', id="mgp128", issue=FALSE)
-call.MGRAST ('metageno','qu', lim=20, ord='name', issue=FALSE)
-call.MGRAST ('metageno','ins', id=4447970.3, ve='me', issue=FALSE)
-call.MGRAST ('proj', 'qu', lim=20, or='na', issue=FALSE)
-call.MGRAST ('proj', 'ins', id=128, ve='fu', issue=FALSE)
-call.MGRAST ('sa', 'qu', lim=20, or='na', issue=FALSE)
-call.MGRAST ('sa', 'ins', id=25823, ve='fu', issue=FALSE)
-call.MGRAST ('va', 'te', issue=FALSE)
-call.MGRAST ('va', 'da', issue=FALSE)
-call.MGRAST ("ann", "info", issue=FALSE)
-call.MGRAST ("ann", "seque", destfile=file.path(tempdir(),"4447970.annotation.fa"), issue=FALSE)
-call.MGRAST ("compu", "alpha", issue=FALSE)
-call.MGRAST ("downloa", "setl", issue=FALSE)
-call.MGRAST ("downloa", "setl", id=4447970.3, issue=FALSE)
-try (call.MGRAST ("downloa", "sel", id=4447970.3, issue=FALSE))
-call.MGRAST ("download", "setlist", st=300, id=4447970.3, i=4447192.3, issue=FALSE)
-call.MGRAST ("download", "setlist", stage=300, id=4447970.3, id=4447192.3, issue=FALSE)
-call.MGRAST ("mat", "org", issue=FALSE)
-call.MGRAST ("mat", "func", filter="a", issue=FALSE)
-call.MGRAST ("mat", "func", id=4447970.3, filter="escherichia", filter_l="family", issue=FALSE)
-call.MGRAST ("mat", "func", id=4447970.3, filter="escherichia", filter_l="family", filter_s="SEED", issue=FALSE)
+tt <- tempfile()
+call.MGRAST ('an', 'se', id=4447970.3, ev=10, ty='or', so='Sw', destfile=file.path(tempdir(),"4447970.3.annotation.fa"), issue=FALSE)   # Too slow
+call.MGRAST ('an', 'si', id=4447970.3, iden=80, ty='fu', so='KO', destfile=file.path(tempdir(),"4447970.3.similarity.csv"), issue=FALSE) # Too slow 
+call.MGRAST ('co', 'al', id=4447970.3, le='or', issue=TRUE) # MGRASTer: resource missing component(s): url 
+call.MGRAST ('do', 'ins', id=4447970.3, fi=350.1, destfile=file.path(tempdir(),"4447970.3.350.fa"), issue=FALSE)  # Too slow
+call.MGRAST ('do', 'se', id=4447970.3, st=650, issue=FALSE)  # MGRASTer: resource missing component(s): stage_id stage_name file_id stage_type file_name 
+call.MGRAST ('li', 'qu', lim=20, or='na', issue=TRUE)
+call.MGRAST ('li', 'ins', id=52924, ve='fu', issue=TRUE) # MGRASTer: resource missing component(s): sequencesets 
+call.MGRAST ('m5', 'on', so='Subsystems', mi='level3', issue=TRUE)
+call.MGRAST ('m5', 'ta', filter='Bacteroidetes', filter_l='phylum', mi='genus', issue=TRUE)
+call.MGRAST ('m5', 'so', issue=TRUE)
+call.MGRAST ('m5', 'ac', id='YP_003268079.1', issue=TRUE) #  call.MGRAST ('m5', 'al', text='IPR001478', issue=TRUE)   # RETIRED funcitonality
+call.MGRAST ('m5', 'md', id='000821a2e2f63df1a3873e4b280002a8', so='InterPro', issue=TRUE)
+call.MGRAST ('m5', 'fu', text='sulfatase', so='GenBank', issue=TRUE)
+call.MGRAST ('m5', 'or', text='akkermansia', so='KEGG', issue=TRUE)
+call.MGRAST ('m5', 'se', text='MAGENHQWQGSIL', so='TrEMBL', issue=TRUE)
+call.MGRAST ('ma', 'or', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), gro='family', so='Ref', resu='ab', ev=15, issue=TRUE)
+call.MGRAST ('ma', 'fu', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), gro='level3', so='Sub', resu='ab', iden=80, filter_l='phylum', filter='Firmicutes', issue=TRUE)
+call.MGRAST ('ma', 'fu', id=c(4447970.3, 4447192.3, 4447102.3, 4447103.3), so='KO', resu='ev', len=25, issue=TRUE)
+call.MGRAST ('metadata', 'te', issue=TRUE)
+call.MGRAST ('metadata', 'cv', issue=TRUE)
+call.MGRAST ('metadata', 'ex', id="mgp128", issue=TRUE)
+call.MGRAST ('metageno','qu', lim=20, ord='name', issue=TRUE)
+call.MGRAST ('metageno','ins', id=4447970.3, ve='me', issue=TRUE)
+call.MGRAST ('proj', 'qu', lim=20, or='na', issue=TRUE)
+call.MGRAST ('proj', 'ins', id=128, ve='fu', issue=TRUE)
+call.MGRAST ('sa', 'qu', lim=20, or='na', issue=TRUE)
+call.MGRAST ('sa', 'ins', id=25823, ve='fu', issue=TRUE)
+call.MGRAST ('va', 'te', issue=TRUE)
+call.MGRAST ("ann", "info", issue=TRUE)
+call.MGRAST ("ann", "seque", destfile=file.path(tempdir(),"4447970.annotation.fa"), issue=TRUE)
+call.MGRAST ("compu", "alpha", issue=TRUE)
+call.MGRAST ("downloa", "setl", issue=TRUE)
+call.MGRAST ("downloa", "setl", id=4447970.3, issue=TRUE) 
+call.MGRAST ("download", "setlist", st=300, id=4447970.3, id=4447192.3, issue=TRUE)
+call.MGRAST ("download", "setlist", stage=300, id=4447970.3, id=4447192.3, issue=TRUE)
+call.MGRAST ("mat", "org", id=4447970.3, issue=TRUE)
+call.MGRAST ("mat", "func", id=4447970.3, filter="escherichia", issue=TRUE)
+call.MGRAST ("mat", "func", id=4447970.3, filter="escherichia", issue=TRUE)
+call.MGRAST ("mat", "func", id=4447970.3, filter="escherichia", filter_l="family", issue=TRUE)  # FAIL
+call.MGRAST ("mat", "func", id=4447970.3, filter="escherichia", filter_l="family", filter_s="SEED", issue=TRUE) # FAIL
 
-}
+}   # end of live API-calling tests
 
 #-----------------------------------------------------------------------------
 #  test calls retrieving info pages
@@ -207,6 +175,4 @@ for (xx in ee) {
 	}
 print (unlist (unname (ff)))
 sapply (ff, unlink)
-
-
 

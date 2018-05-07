@@ -84,7 +84,7 @@ Daniel T. Braithwaite
 }
 
 \examples{
-\dontrun{
+\donttest{
 ##  The calls below are adapted from the MG-RAST API documentation pages.
 ##  An example is provided for most resource types.
 ##  These examples are "not run" because they take too long.
@@ -140,7 +140,6 @@ aa <- list (group="level3", source="Sub", res="ab", ident=80,
 	filter_lev="phylum", filter="Firmicutes")
 call.MGRAST ("matrix", "org", id=xx, group="family", source="Ref", result="abund", eval=15)
 call.MGRAST ("matrix", "func", id=xx, args=aa)
-call.MGRAST ("matrix", "feat", id=yy, source="KEGG", result="ev", len=25)
 
 ##
 ##  parsing URLs for the calls above

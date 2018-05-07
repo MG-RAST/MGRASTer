@@ -3,8 +3,11 @@ Type: Package
 Title: API Client for the MG-RAST Metagenomics Analysis Server
 Authors@R: c(
  person (c("Daniel", "T."), "Braithwaite", 
- role = c("aut", "cre"), email = "contact.dtb@gmail.com"),
+ role = c("aut"), email = "contact.dtb@gmail.com"),
+ person (c("William", "L."), "Trimble", 
+ role = c("cre", "ctb"), email = "trimble@anl.gov"),
  person (c("University", "of"), "Chicago", role = "cph"))
+Maintainer: William L. Trimble <trimble@anl.gov>
 Version: 0.9.1
 Depends:
     R (>= 3.0),
@@ -13,12 +16,20 @@ Imports: curl
 Suggests:
     RJSONIO
 URL: https://github.com/braithwaite/MGRASTer/
-Date: 2015-02-05
-Description: Convenience Functions for R Language Access to the v.1 API of the
-    MG-RAST Metagenomics Analysis Server.
-License: BSD_2_clause + file LICENSE
+Date: 2018-05-07
+Description: Convenience functions for using the v.1 API of the
+    MG-RAST metagenomics analysis server. <https://api.mg-rast.org>
+    This package can construct a model of the API syntax, use the 
+    model to validate API calls and API returns, and will place
+    low-level requests to the API, automatically managing 
+    authorization and returning the data as R frames.  Used by 
+    the user-facing client, 'matR', that supports asynchronous 
+    requests and metadata download.  MG-RAST is described in 
+    Wilke, A. (2013) <10.1016/B978-0-12-407863-5.00022-8> and 
+    Meyer, F. (2017) <10.1093/bib/bbx105>.
+License: BSD_2_clause + file LICENSE  
 Copyright: University of Chicago
 LazyData: yes
 Collate:
     source.R
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

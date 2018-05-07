@@ -13,12 +13,12 @@ Manage implementation of the MG-RAST API via its local representation.
 }
 
 \usage{
-load.MGRAST(file=API.filepath())
-build.MGRAST(file=API.filename)
+load.MGRAST(filename=API.filepath())
+build.MGRAST(filename=API.filename)
 .MGRAST
 }
 \arguments{
-  \item{file}{a file name (string)}
+  \item{filename}{a file name (string)}
 }
 
 \details{
@@ -63,7 +63,7 @@ Daniel T. Braithwaite
 }
 
 \examples{
-\dontrun{
+\donttest{
 ##  get API currently in use
 API <- get ("API", .MGRAST)
 
